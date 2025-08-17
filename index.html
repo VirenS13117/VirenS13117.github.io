@@ -266,6 +266,11 @@
     <p>Minimal web dashboard using Python, Streamlit, and Yahoo Finance API for personalized investment insights.</p>
     <a href="https://github.com/yourusername/portfolio-tracker" target="_blank">View on GitHub</a>
   </div>
+  <div class="project">
+    <h3><a href="#" id="cureMadeEasyLink" style="color: #1f2937; text-decoration: none; cursor: pointer;">CureMadeEasy</a></h3>
+    <p>A comprehensive healthcare platform that simplifies medical record management and patient care. Access requires authentication for security and privacy.</p>
+    <span style="color: #666; font-size: 14px;">🔒 Login Required</span>
+  </div>
 </section>
 
 <section id="contact">
@@ -426,6 +431,12 @@
   gmailBtn.addEventListener('click', signInWithGmail);
   facebookBtn.addEventListener('click', signInWithFacebook);
   logoutBtn.addEventListener('click', logout);
+
+  // CureMadeEasy project click handler
+  document.getElementById('cureMadeEasyLink').addEventListener('click', (e) => {
+    e.preventDefault();
+    openModal();
+  });
 
   // Close modal when clicking outside
   loginModal.addEventListener('click', (e) => {
