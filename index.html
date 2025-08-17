@@ -57,14 +57,7 @@
     }
 
     /* Authentication Styles */
-    .auth-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-    }
-    
-    .login-btn, .logout-btn {
+    .logout-btn {
       background: #1f2937;
       color: white;
       border: none;
@@ -75,11 +68,15 @@
       transition: background 0.3s;
     }
     
-    .login-btn:hover, .logout-btn:hover {
+    .logout-btn:hover {
       background: #374151;
     }
     
     .user-info {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
       background: white;
       padding: 15px;
       border-radius: 8px;
@@ -195,15 +192,12 @@
 </head>
 <body>
 
-<!-- Authentication Container -->
-<div class="auth-container">
-  <button class="login-btn" id="loginBtn">Login</button>
-  <div class="user-info" id="userInfo">
-    <img class="user-avatar" id="userAvatar" src="" alt="User Avatar">
-    <p class="user-name" id="userName"></p>
-    <p class="user-email" id="userEmail"></p>
-    <button class="logout-btn" id="logoutBtn">Logout</button>
-  </div>
+<!-- User Info (hidden by default, shown when logged in) -->
+<div class="user-info" id="userInfo">
+  <img class="user-avatar" id="userAvatar" src="" alt="User Avatar">
+  <p class="user-name" id="userName"></p>
+  <p class="user-email" id="userEmail"></p>
+  <button class="logout-btn" id="logoutBtn">Logout</button>
 </div>
 
 <!-- Login Modal -->
@@ -267,9 +261,9 @@
     <a href="https://github.com/yourusername/portfolio-tracker" target="_blank">View on GitHub</a>
   </div>
   <div class="project">
-    <h3><a href="#" id="cureMadeEasyLink" style="color: #1f2937; text-decoration: none; cursor: pointer;">CureMadeEasy</a></h3>
+    <h3>CureMadeEasy</h3>
     <p>A comprehensive healthcare platform that simplifies medical record management and patient care. Access requires authentication for security and privacy.</p>
-    <span style="color: #666; font-size: 14px;">🔒 Login Required</span>
+    <span id="loginRequiredBtn" style="color: #1f2937; font-size: 14px; cursor: pointer; text-decoration: underline; font-weight: bold;">🔒 Login Required</span>
   </div>
 </section>
 
@@ -305,7 +299,6 @@
   const auth = firebase.auth();
 
   // DOM Elements
-  const loginBtn = document.getElementById('loginBtn');
   const userInfo = document.getElementById('userInfo');
   const loginModal = document.getElementById('loginModal');
   const modalClose = document.getElementById('modalClose');
@@ -315,19 +308,20 @@
   const userAvatar = document.getElementById('userAvatar');
   const userName = document.getElementById('userName');
   const userEmail = document.getElementById('userEmail');
+  const loginRequiredBtn = document.getElementById('loginRequiredBtn');
 
   // Authentication State Observer
   auth.onAuthStateChanged((user) => {
     if (user) {
       // User is signed in
       displayUserInfo(user);
-      loginBtn.style.display = 'none';
       userInfo.style.display = 'flex';
+      loginRequiredBtn.style.display = 'none'; // Hide login required text
       closeModal();
     } else {
       // User is signed out
-      loginBtn.style.display = 'block';
       userInfo.style.display = 'none';
+      loginRequiredBtn.style.display = 'inline'; // Show login required text
     }
   });
 
@@ -425,14 +419,13 @@
   }
 
   // Event Listeners
-  loginBtn.addEventListener('click', openModal);
   modalClose.addEventListener('click', closeModal);
   gmailBtn.addEventListener('click', signInWithGmail);
   facebookBtn.addEventListener('click', signInWithFacebook);
   logoutBtn.addEventListener('click', logout);
 
-  // CureMadeEasy project click handler
-  document.getElementById('cureMadeEasyLink').addEventListener('click', (e) => {
+  // Login Required button click handler
+  loginRequiredBtn.addEventListener('click', (e) => {
     e.preventDefault();
     openModal();
   });
