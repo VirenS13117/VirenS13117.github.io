@@ -615,12 +615,16 @@
   // Authentication State Observer
   auth.onAuthStateChanged((user) => {
     if (user) {
-      // User is signed in
-      displayUserInfo(user);
-      authSection.style.display = 'none';
-      userInfo.style.display = 'flex';
+      // User is signed in - redirect to dashboard
+      console.log('User authenticated, redirecting to dashboard...');
+      showNotification('Login successful! Redirecting to your dashboard...', 'success');
+      
+      // Small delay to show the success message, then redirect
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
     } else {
-      // User is signed out
+      // User is signed out - show login/register forms
       authSection.style.display = 'block';
       userInfo.style.display = 'none';
     }

@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CureMadeEasy - Your Health Dashboard</title>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f8fafc;
+      color: #333;
+    }
+    
+    /* Header */
+    .header {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #16a085;
+      text-decoration: none;
+    }
+    
+    .search-bar {
+      flex: 1;
+      max-width: 500px;
+      margin: 0 2rem;
+      position: relative;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 12px 50px 12px 16px;
+      border: 2px solid #e0e6ed;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    
+    .search-input:focus {
+      border-color: #16a085;
+    }
+    
+    .search-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #16a085;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid #16a085;
+    }
+    
+    .user-name {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    /* Main Content */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    /* Welcome Section */
+    .welcome-section {
+      background: linear-gradient(135deg, #16a085, #1abc9c);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .welcome-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .welcome-subtitle {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    
+    .action-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .action-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .action-icon {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 1rem;
+      background: #ecf0f1;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    
+    .medicines .action-icon { background: #e8f5e8; color: #27ae60; }
+    .lab-tests .action-icon { background: #fff3cd; color: #f39c12; }
+    .consultations .action-icon { background: #e3f2fd; color: #3498db; }
+    .health-records .action-icon { background: #fce4ec; color: #e91e63; }
+    
+    .action-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .action-description {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Categories Section */
+    .categories-section {
+      margin-bottom: 3rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+    
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    
+    .category-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .category-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .category-name {
+      font-weight: 600;
+      color: #333;
+      font-size: 0.9rem;
+    }
+    
+    /* Featured Section */
+    .featured-section {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    
+    .featured-products {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .product-card {
+      border: 1px solid #e0e6ed;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .product-card:hover {
+      border-color: #16a085;
+      transform: translateY(-2px);
+    }
+    
+    .product-image {
+      width: 100%;
+      height: 120px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: #16a085;
+    }
+    
+    .product-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .product-price {
+      color: #16a085;
+      font-weight: 600;
+    }
+    
+    .health-tips {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .tip-item {
+      padding: 1rem 0;
+      border-bottom: 1px solid #e0e6ed;
+      cursor: pointer;
+    }
+    
+    .tip-item:last-child {
+      border-bottom: none;
+    }
+    
+    .tip-title {
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tip-preview {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Upload Section */
+    .upload-section {
+      background: linear-gradient(135deg, #3498db, #2980b9);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .upload-btn {
+      background: white;
+      color: #3498db;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+      }
+      
+      .search-bar {
+        margin: 0;
+        max-width: none;
+      }
+      
+      .main-content {
+        padding: 1rem;
+      }
+      
+      .featured-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      
+      .welcome-title {
+        font-size: 1.5rem;
+      }
+    }
+    
+    /* Loading State */
+    .loading {
+      text-align: center;
+      padding: 4rem 2rem;
+    }
+    
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e0e6ed;
+      border-top: 4px solid #16a085;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div id="loadingScreen" class="loading">
+  <div class="spinner"></div>
+  <p>Loading your health dashboard...</p>
+</div>
+
+<!-- Main Dashboard (hidden initially) -->
+<div id="dashboard" style="display: none;">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="#" class="logo">CureMadeEasy</a>
+      
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search medicines, health products, lab tests...">
+        <button class="search-btn">🔍</button>
+      </div>
+      
+      <div class="user-menu">
+        <a href="index.html" style="color: #666; text-decoration: none; margin-right: 1rem; font-size: 14px;">← Portfolio</a>
+        <img class="user-avatar" id="userAvatar" src="" alt="User">
+        <span class="user-name" id="userName"></span>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Welcome Section -->
+    <section class="welcome-section">
+      <h1 class="welcome-title">Welcome back, <span id="welcomeName"></span>!</h1>
+      <p class="welcome-subtitle">Your health is our priority. Manage your medicines, book tests, and stay healthy with CureMadeEasy.</p>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <div class="action-card medicines">
+        <div class="action-icon">💊</div>
+        <h3 class="action-title">Order Medicines</h3>
+        <p class="action-description">Browse and order from 70,000+ medicines with doorstep delivery</p>
+      </div>
+      
+      <div class="action-card lab-tests">
+        <div class="action-icon">🧪</div>
+        <h3 class="action-title">Book Lab Tests</h3>
+        <p class="action-description">Book diagnostic tests at home or visit our partner labs</p>
+      </div>
+      
+      <div class="action-card consultations">
+        <div class="action-icon">👩‍⚕️</div>
+        <h3 class="action-title">Consult Doctors</h3>
+        <p class="action-description">Connect with certified doctors online for instant consultation</p>
+      </div>
+      
+      <div class="action-card health-records">
+        <div class="action-icon">📋</div>
+        <h3 class="action-title">Health Records</h3>
+        <p class="action-description">Store and manage your medical records securely</p>
+      </div>
+    </section>
+
+    <!-- Upload Prescription -->
+    <section class="upload-section">
+      <h2>Upload Your Prescription</h2>
+      <p>Get your medicines delivered by uploading a photo of your prescription</p>
+      <button class="upload-btn">📷 Upload Prescription</button>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories-section">
+      <h2 class="section-title">Shop by Health Categories</h2>
+      <div class="categories-grid">
+        <div class="category-card">
+          <div class="category-icon">🫀</div>
+          <div class="category-name">Heart Care</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🧠</div>
+          <div class="category-name">Mental Health</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🦴</div>
+          <div class="category-name">Bone & Joint</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">👁️</div>
+          <div class="category-name">Eye Care</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🍼</div>
+          <div class="category-name">Baby Care</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🤱</div>
+          <div class="category-name">Women's Health</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">💪</div>
+          <div class="category-name">Fitness</div>
+        </div>
+        <div class="category-card">
+          <div class="category-icon">🦷</div>
+          <div class="category-name">Oral Care</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured-section">
+      <div class="featured-products">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="product-grid">
+          <div class="product-card">
+            <div class="product-image">💊</div>
+            <div class="product-name">Paracetamol 500mg</div>
+            <div class="product-price">₹25.00</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">🩹</div>
+            <div class="product-name">First Aid Kit</div>
+            <div class="product-price">₹499.00</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">🌡️</div>
+            <div class="product-name">Digital Thermometer</div>
+            <div class="product-price">₹299.00</div>
+          </div>
+          <div class="product-card">
+            <div class="product-image">💉</div>
+            <div class="product-name">Blood Glucose Strips</div>
+            <div class="product-price">₹450.00</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="health-tips">
+        <h2 class="section-title">Health Tips</h2>
+        <div class="tip-item">
+          <div class="tip-title">Stay Hydrated</div>
+          <div class="tip-preview">Drink at least 8 glasses of water daily to maintain optimal health...</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-title">Regular Exercise</div>
+          <div class="tip-preview">30 minutes of moderate exercise daily can significantly improve your health...</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-title">Balanced Diet</div>
+          <div class="tip-preview">Include fruits, vegetables, and whole grains in your daily meals...</div>
+        </div>
+        <div class="tip-item">
+          <div class="tip-title">Quality Sleep</div>
+          <div class="tip-preview">Get 7-8 hours of sleep for better mental and physical health...</div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Firebase Authentication Script -->
+<script>
+  // Firebase Configuration - CureMadeEasy Project
+  const firebaseConfig = {
+    apiKey: "AIzaSyB8W5VEf_7t9qy0WEU6imxyVCgqTbNC7Yw",
+    authDomain: "curemadeeasy.firebaseapp.com",
+    projectId: "curemadeeasy",
+    storageBucket: "curemadeeasy.firebasestorage.app",
+    messagingSenderId: "976934114566",
+    appId: "1:976934114566:web:1aeb961041884b9a66fa87",
+    measurementId: "G-J8500P5VNW"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // DOM Elements
+  const loadingScreen = document.getElementById('loadingScreen');
+  const dashboard = document.getElementById('dashboard');
+  const userAvatar = document.getElementById('userAvatar');
+  const userName = document.getElementById('userName');
+  const welcomeName = document.getElementById('welcomeName');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Authentication State Observer
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      // User is signed in - show dashboard
+      displayUserInfo(user);
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+        dashboard.style.display = 'block';
+      }, 1500); // Simulate loading time
+    } else {
+      // User is signed out - redirect to login
+      window.location.href = 'curemadeeasy.html';
+    }
+  });
+
+  // Display User Information
+  function displayUserInfo(user) {
+    const displayName = user.displayName || user.email.split('@')[0] || 'User';
+    const avatarUrl = user.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=16a085&color=fff&size=80`;
+    
+    userAvatar.src = avatarUrl;
+    userName.textContent = displayName;
+    welcomeName.textContent = displayName;
+  }
+
+  // Logout Function
+  async function logout() {
+    try {
+      await auth.signOut();
+      console.log('User logged out');
+      // Redirect handled by auth state observer
+    } catch (error) {
+      console.error('Logout error:', error);
+      alert('Error logging out. Please try again.');
+    }
+  }
+
+  // Search Functionality
+  function initializeSearch() {
+    const searchInput = document.querySelector('.search-input');
+    const searchBtn = document.querySelector('.search-btn');
+    
+    function performSearch() {
+      const query = searchInput.value.trim();
+      if (query) {
+        // Simulate search - in real app, this would hit an API
+        alert(`Searching for: "${query}"\n\nThis would show search results for medicines, health products, and lab tests.`);
+      }
+    }
+    
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+  }
+
+  // Initialize Action Cards
+  function initializeActionCards() {
+    const actionCards = document.querySelectorAll('.action-card');
+    
+    actionCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const title = card.querySelector('.action-title').textContent;
+        
+        switch (title) {
+          case 'Order Medicines':
+            alert('Opening Medicine Store...\n\nThis would take you to browse and order from 70,000+ medicines.');
+            break;
+          case 'Book Lab Tests':
+            alert('Opening Lab Tests...\n\nThis would show available diagnostic tests and booking options.');
+            break;
+          case 'Consult Doctors':
+            alert('Opening Doctor Consultations...\n\nThis would connect you with certified doctors for online consultation.');
+            break;
+          case 'Health Records':
+            alert('Opening Health Records...\n\nThis would show your stored medical records and prescription history.');
+            break;
+        }
+      });
+    });
+  }
+
+  // Initialize Categories
+  function initializeCategories() {
+    const categoryCards = document.querySelectorAll('.category-card');
+    
+    categoryCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const categoryName = card.querySelector('.category-name').textContent;
+        alert(`Opening ${categoryName} products...\n\nThis would show all products and medicines related to ${categoryName}.`);
+      });
+    });
+  }
+
+  // Initialize Products
+  function initializeProducts() {
+    const productCards = document.querySelectorAll('.product-card');
+    
+    productCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const productName = card.querySelector('.product-name').textContent;
+        const productPrice = card.querySelector('.product-price').textContent;
+        alert(`Product: ${productName}\nPrice: ${productPrice}\n\nThis would show product details and add to cart option.`);
+      });
+    });
+  }
+
+  // Initialize Upload Functionality
+  function initializeUpload() {
+    const uploadBtn = document.querySelector('.upload-btn');
+    
+    uploadBtn.addEventListener('click', () => {
+      // In a real app, this would open a file picker
+      alert('Upload Prescription\n\nThis would open your camera or file picker to upload a prescription photo.\n\nOur AI would then read your prescription and suggest available medicines.');
+    });
+  }
+
+  // Initialize Health Tips
+  function initializeHealthTips() {
+    const tipItems = document.querySelectorAll('.tip-item');
+    
+    tipItems.forEach(tip => {
+      tip.addEventListener('click', () => {
+        const title = tip.querySelector('.tip-title').textContent;
+        alert(`Health Tip: ${title}\n\nThis would open a detailed health article with comprehensive information and recommendations.`);
+      });
+    });
+  }
+
+  // Initialize all interactive elements
+  function initializeInteractions() {
+    initializeSearch();
+    initializeActionCards();
+    initializeCategories();
+    initializeProducts();
+    initializeUpload();
+    initializeHealthTips();
+  }
+
+  // Event Listeners
+  logoutBtn.addEventListener('click', logout);
+
+  // Initialize everything when the page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    initializeInteractions();
+  });
+
+  // Add some demo notifications (in a real app, these would be based on user data)
+  setTimeout(() => {
+    if (dashboard.style.display === 'block') {
+      // Simulate a medicine reminder notification
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #27ae60;
+        color: white;
+        padding: 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        max-width: 300px;
+      `;
+      notification.innerHTML = `
+        <strong>💊 Medicine Reminder</strong><br>
+        <small>Time to take your Vitamin D supplement!</small>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Remove notification after 5 seconds
+      setTimeout(() => {
+        if (document.body.contains(notification)) {
+          notification.style.opacity = '0';
+          notification.style.transition = 'opacity 0.3s';
+          setTimeout(() => document.body.removeChild(notification), 300);
+        }
+      }, 5000);
+    }
+  }, 3000);
+</script>
+
+</body>
+</html>
