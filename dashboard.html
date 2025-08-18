@@ -410,7 +410,7 @@
       <a href="#" class="logo">CureMadeEasy</a>
       
       <div class="search-bar">
-        <input type="text" class="search-input" placeholder="Search medicines, health products, lab tests...">
+        <input type="text" class="search-input" placeholder="Search medications, health products, lab tests across Canada...">
         <button class="search-btn">🔍</button>
       </div>
       
@@ -428,40 +428,40 @@
     <!-- Welcome Section -->
     <section class="welcome-section">
       <h1 class="welcome-title">Welcome back, <span id="welcomeName"></span>!</h1>
-      <p class="welcome-subtitle">Your health is our priority. Manage your medicines, book tests, and stay healthy with CureMadeEasy.</p>
+      <p class="welcome-subtitle">Your health is our priority. Manage your medications, book tests, and stay healthy with CureMadeEasy - Canada's trusted healthcare platform.</p>
     </section>
 
     <!-- Quick Actions -->
     <section class="quick-actions">
       <div class="action-card medicines">
         <div class="action-icon">💊</div>
-        <h3 class="action-title">Order Medicines</h3>
-        <p class="action-description">Browse and order from 70,000+ medicines with doorstep delivery</p>
+        <h3 class="action-title">Order Medications</h3>
+        <p class="action-description">Browse Health Canada approved medications with free delivery across Canada</p>
       </div>
       
       <div class="action-card lab-tests">
         <div class="action-icon">🧪</div>
         <h3 class="action-title">Book Lab Tests</h3>
-        <p class="action-description">Book diagnostic tests at home or visit our partner labs</p>
+        <p class="action-description">Schedule diagnostic tests at home or visit our certified Canadian labs</p>
       </div>
       
       <div class="action-card consultations">
         <div class="action-icon">👩‍⚕️</div>
-        <h3 class="action-title">Consult Doctors</h3>
-        <p class="action-description">Connect with certified doctors online for instant consultation</p>
+        <h3 class="action-title">Consult Healthcare Providers</h3>
+        <p class="action-description">Connect with licensed Canadian physicians for virtual consultations</p>
       </div>
       
       <div class="action-card health-records">
         <div class="action-icon">📋</div>
         <h3 class="action-title">Health Records</h3>
-        <p class="action-description">Store and manage your medical records securely</p>
+        <p class="action-description">Securely store and manage your medical records with PIPEDA compliance</p>
       </div>
     </section>
 
     <!-- Upload Prescription -->
     <section class="upload-section">
       <h2>Upload Your Prescription</h2>
-      <p>Get your medicines delivered by uploading a photo of your prescription</p>
+      <p>Get your medications delivered across Canada by uploading a photo of your prescription from a licensed Canadian physician</p>
       <button class="upload-btn">📷 Upload Prescription</button>
     </section>
 
@@ -511,23 +511,23 @@
         <div class="product-grid">
           <div class="product-card">
             <div class="product-image">💊</div>
-            <div class="product-name">Paracetamol 500mg</div>
-            <div class="product-price">₹25.00</div>
+            <div class="product-name">Acetaminophen 500mg</div>
+            <div class="product-price">CAD $8.99</div>
           </div>
           <div class="product-card">
             <div class="product-image">🩹</div>
             <div class="product-name">First Aid Kit</div>
-            <div class="product-price">₹499.00</div>
+            <div class="product-price">CAD $34.99</div>
           </div>
           <div class="product-card">
             <div class="product-image">🌡️</div>
             <div class="product-name">Digital Thermometer</div>
-            <div class="product-price">₹299.00</div>
+            <div class="product-price">CAD $19.99</div>
           </div>
           <div class="product-card">
             <div class="product-image">💉</div>
-            <div class="product-name">Blood Glucose Strips</div>
-            <div class="product-price">₹450.00</div>
+            <div class="product-name">Blood Glucose Test Strips</div>
+            <div class="product-price">CAD $28.99</div>
           </div>
         </div>
       </div>
@@ -535,20 +535,20 @@
       <div class="health-tips">
         <h2 class="section-title">Health Tips</h2>
         <div class="tip-item">
-          <div class="tip-title">Stay Hydrated</div>
-          <div class="tip-preview">Drink at least 8 glasses of water daily to maintain optimal health...</div>
+          <div class="tip-title">Stay Hydrated During Canadian Winters</div>
+          <div class="tip-preview">Drink at least 8 glasses of water daily, especially during dry winter months...</div>
         </div>
         <div class="tip-item">
-          <div class="tip-title">Regular Exercise</div>
-          <div class="tip-preview">30 minutes of moderate exercise daily can significantly improve your health...</div>
+          <div class="tip-title">Winter Exercise Tips</div>
+          <div class="tip-preview">Stay active with 30 minutes of exercise daily, even during cold Canadian winters...</div>
         </div>
         <div class="tip-item">
-          <div class="tip-title">Balanced Diet</div>
-          <div class="tip-preview">Include fruits, vegetables, and whole grains in your daily meals...</div>
+          <div class="tip-title">Seasonal Nutrition</div>
+          <div class="tip-preview">Include local Canadian produce like berries, maple syrup, and seasonal vegetables...</div>
         </div>
         <div class="tip-item">
-          <div class="tip-title">Quality Sleep</div>
-          <div class="tip-preview">Get 7-8 hours of sleep for better mental and physical health...</div>
+          <div class="tip-title">Managing Seasonal Affective Disorder</div>
+          <div class="tip-preview">Combat winter blues with light therapy and maintaining regular sleep schedules...</div>
         </div>
       </div>
     </section>
@@ -626,7 +626,7 @@
       const query = searchInput.value.trim();
       if (query) {
         // Simulate search - in real app, this would hit an API
-        alert(`Searching for: "${query}"\n\nThis would show search results for medicines, health products, and lab tests.`);
+        alert(`Searching across Canada for: "${query}"\n\nThis would show search results for Health Canada approved medications, health products, and lab tests available in your province.`);
       }
     }
     
@@ -647,17 +647,17 @@
         const title = card.querySelector('.action-title').textContent;
         
         switch (title) {
-          case 'Order Medicines':
-            alert('Opening Medicine Store...\n\nThis would take you to browse and order from 70,000+ medicines.');
+          case 'Order Medications':
+            alert('Opening Canadian Pharmacy...\n\nThis would take you to browse Health Canada approved medications with free shipping across Canada.');
             break;
           case 'Book Lab Tests':
-            alert('Opening Lab Tests...\n\nThis would show available diagnostic tests and booking options.');
+            alert('Opening Lab Tests...\n\nThis would show available diagnostic tests at certified Canadian laboratories and at-home collection services.');
             break;
-          case 'Consult Doctors':
-            alert('Opening Doctor Consultations...\n\nThis would connect you with certified doctors for online consultation.');
+          case 'Consult Healthcare Providers':
+            alert('Opening Virtual Care...\n\nThis would connect you with licensed Canadian physicians for secure virtual consultations covered by provincial health plans.');
             break;
           case 'Health Records':
-            alert('Opening Health Records...\n\nThis would show your stored medical records and prescription history.');
+            alert('Opening Health Records...\n\nThis would show your stored medical records with PIPEDA-compliant security and easy sharing with Canadian healthcare providers.');
             break;
         }
       });
@@ -695,7 +695,7 @@
     
     uploadBtn.addEventListener('click', () => {
       // In a real app, this would open a file picker
-      alert('Upload Prescription\n\nThis would open your camera or file picker to upload a prescription photo.\n\nOur AI would then read your prescription and suggest available medicines.');
+      alert('Upload Canadian Prescription\n\nThis would open your camera or file picker to upload a prescription photo from a licensed Canadian physician.\n\nOur AI would verify the prescription and suggest Health Canada approved medications available for delivery across Canada.');
     });
   }
 
@@ -747,8 +747,8 @@
         max-width: 300px;
       `;
       notification.innerHTML = `
-        <strong>💊 Medicine Reminder</strong><br>
-        <small>Time to take your Vitamin D supplement!</small>
+        <strong>💊 Medication Reminder</strong><br>
+        <small>Time to take your Vitamin D supplement - especially important during Canadian winters!</small>
       `;
       
       document.body.appendChild(notification);

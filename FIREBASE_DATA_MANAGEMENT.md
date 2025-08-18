@@ -1,14 +1,14 @@
-# Firebase Authentication - Data Storage & Management Guide
+# Firebase Authentication - Data Storage & Management Guide (Canada)
 
 ## Where is Login Data Stored?
 
-All user authentication data for CureMadeEasy is stored in **Google Firebase Authentication**, which uses Google Cloud Platform's secure infrastructure.
+All user authentication data for CureMadeEasy Canada is stored in **Google Firebase Authentication**, which uses Google Cloud Platform's secure infrastructure with Canadian data residency considerations.
 
 ### Data Storage Location
-- **Infrastructure**: Google Cloud Platform (GCP) data centers
+- **Infrastructure**: Google Cloud Platform (GCP) data centres (Canadian region when possible)
 - **Security**: Industry-standard encryption (AES-256)
-- **Compliance**: GDPR, HIPAA, SOC 2 compliant
-- **Replication**: Multi-region backup and redundancy
+- **Compliance**: PIPEDA, GDPR, SOC 2 compliant, Health Canada digital health guidelines
+- **Replication**: Multi-region backup and redundancy with Canadian data protection standards
 
 ## How to Access Your User Data
 
@@ -64,19 +64,20 @@ All user authentication data for CureMadeEasy is stored in **Google Firebase Aut
 3. **Account Deletion**: User can delete their own account
 4. **Admin Deletion**: You can delete users from console
 
-### GDPR Compliance
-- **Right to Access**: Users can request their data
-- **Right to Deletion**: Users can delete their accounts
-- **Data Portability**: User data can be exported
-- **Consent Management**: Clear consent for data processing
+### PIPEDA & Canadian Privacy Compliance
+- **Right to Access**: Users can request their data under PIPEDA
+- **Right to Deletion**: Users can delete their accounts following Canadian privacy laws
+- **Data Portability**: User data can be exported for healthcare continuity
+- **Consent Management**: Clear consent for data processing under Canadian federal and provincial privacy legislation
+- **Provincial Health Acts**: Compliance with individual provincial health information privacy acts
 
 ## Geographic Data Location
 
-### Primary Regions
-Firebase Authentication data is stored in:
-- **Default**: `us-central1` (Iowa, USA)
-- **Europe**: `europe-west1` (Belgium) - for GDPR compliance
-- **Asia**: `asia-southeast1` (Singapore)
+### Primary Regions for Canadian Users
+Firebase Authentication data for Canadian users is stored in:
+- **Preferred**: `northamerica-northeast1` (Montreal, Canada) - for Canadian data residency
+- **Secondary**: `us-central1` (Iowa, USA) - with cross-border data agreements
+- **Backup**: `us-east1` (South Carolina, USA) - following Canadian privacy law requirements for cross-border data transfers
 
 ### How to Check Your Project's Region
 1. Firebase Console → Project Settings
@@ -147,14 +148,19 @@ If you want to migrate away from Firebase:
 - **AWS Cognito**: Amazon's user authentication
 - **Custom Solution**: Build your own with Node.js + PostgreSQL
 
-## Privacy Policy Requirements
+## Privacy Policy Requirements for Canadian Healthcare Platform
 
-Since you're collecting user data, you should have a privacy policy that mentions:
-- What data you collect (email, login times)
-- How you use it (authentication, account management)
-- Where it's stored (Google Firebase, specific regions)
-- User rights (access, deletion, portability)
-- Contact information for privacy questions
+Since you're collecting healthcare-related user data in Canada, your privacy policy must comply with PIPEDA and provincial health information acts:
+- What data you collect (email, login times, health records access logs)
+- How you use it (authentication, account management, healthcare coordination)
+- Where it's stored (Google Firebase, Canadian data centres when possible)
+- User rights under PIPEDA (access, deletion, portability, correction)
+- Provincial health information privacy rights
+- Cross-border data transfer safeguards
+- Healthcare provider data sharing protocols
+- Contact information for privacy questions and complaints (including provincial privacy commissioners)
+- Retention periods for health-related information
+- Data breach notification procedures
 
 ## Security Best Practices
 
