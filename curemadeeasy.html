@@ -506,7 +506,8 @@
       <img class="user-avatar" id="userAvatar" src="" alt="User Avatar">
       <div class="user-name" id="userName"></div>
       <div class="user-email" id="userEmail"></div>
-      <div class="success-message">✅ Successfully logged in! Welcome to CureMadeEasy.</div>
+      <div class="success-message">✅ Successfully logged in! Redirecting to dashboard...</div>
+      <button onclick="window.location.href='dashboard.html'" style="background: #16a085; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer; margin: 10px 5px;">Go to Dashboard</button>
       <button class="logout-btn" id="logoutBtn">Logout</button>
     </div>
   </div>
@@ -612,21 +613,37 @@
   const userName = document.getElementById('userName');
   const userEmail = document.getElementById('userEmail');
 
+  // Login state tracking
+  let isLoggingIn = false;
+
   // Authentication State Observer
   auth.onAuthStateChanged((user) => {
-    if (user) {
-      // User is signed in - redirect to dashboard
-      console.log('User authenticated, redirecting to dashboard...');
+    console.log('Auth state changed. User:', user ? user.email : 'none', 'isLoggingIn:', isLoggingIn);
+    
+    if (user && isLoggingIn) {
+      // User is signed in after a login action - redirect to dashboard
+      console.log('User authenticated after login action, redirecting to dashboard...');
       showNotification('Login successful! Redirecting to your dashboard...', 'success');
       
       // Small delay to show the success message, then redirect
       setTimeout(() => {
+        console.log('Redirecting to dashboard.html...');
         window.location.href = 'dashboard.html';
       }, 1500);
-    } else {
+    } else if (user && !isLoggingIn) {
+      // User is already logged in (page refresh) - redirect immediately
+      console.log('User already authenticated, redirecting to dashboard...');
+      showNotification('Already logged in. Redirecting...', 'success');
+      setTimeout(() => {
+        console.log('Redirecting to dashboard.html...');
+        window.location.href = 'dashboard.html';
+      }, 500);
+    } else if (!user) {
       // User is signed out - show login/register forms
+      console.log('User signed out, showing login forms');
       authSection.style.display = 'block';
       userInfo.style.display = 'none';
+      isLoggingIn = false;
     }
   });
 
@@ -644,11 +661,13 @@
     provider.addScope('profile');
     
     try {
+      isLoggingIn = true; // Set login flag
       const result = await auth.signInWithPopup(provider);
       console.log('Gmail login successful:', result.user);
-      showNotification('Successfully logged in with Gmail!', 'success');
+      // Note: redirect will be handled by auth state observer
     } catch (error) {
       console.error('Gmail login error:', error);
+      isLoggingIn = false; // Reset flag on error
       showNotification('Gmail login failed: ' + error.message, 'error');
     }
   }
@@ -664,14 +683,16 @@
     }
     
     try {
+      isLoggingIn = true; // Set login flag
       const result = await auth.signInWithEmailAndPassword(email, password);
       console.log('Email login successful:', result.user);
-      showNotification('Successfully logged in!', 'success');
       // Clear form
       loginEmail.value = '';
       loginPassword.value = '';
+      // Note: redirect will be handled by auth state observer
     } catch (error) {
       console.error('Email login error:', error);
+      isLoggingIn = false; // Reset flag on error
       // Handle specific error cases
       let errorMessage = 'Login failed: ';
       switch (error.code) {
@@ -717,20 +738,20 @@
     }
     
     try {
+      isLoggingIn = true; // Set login flag for registration too
       const result = await auth.createUserWithEmailAndPassword(email, password);
       console.log('Registration successful:', result.user);
-      showNotification('Account created successfully! Welcome to CureMadeEasy!', 'success');
       
       // Clear form
       registerEmail.value = '';
       registerPassword.value = '';
       confirmPassword.value = '';
       
-      // Switch to login view
-      switchToLogin();
+      // Note: redirect will be handled by auth state observer
       
     } catch (error) {
       console.error('Registration error:', error);
+      isLoggingIn = false; // Reset flag on error
       let errorMessage = 'Registration failed: ';
       switch (error.code) {
         case 'auth/email-already-in-use':
